@@ -5,9 +5,9 @@
 package main
 
 import (
-	"fmt"
 	"math/big"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func solve() int64 {
@@ -23,22 +23,4 @@ func solve() int64 {
 	return sum.Int64()
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 48: Self Powers")
-	fmt.Println("========================")
-	benchmark(10000)
-}
+func main() { bench.Run(48, solve) }

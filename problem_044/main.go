@@ -5,16 +5,16 @@
 package main
 
 import (
-	"fmt"
 	"sort"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func pentagonal(n int) int {
 	return n * (3*n - 1) / 2
 }
 
-func solve() int {
+func solve() int64 {
 	const maxN = 3000
 	p := make([]int, maxN)
 	for i := 0; i < maxN; i++ {
@@ -31,28 +31,10 @@ func solve() int {
 			if sort.SearchInts(p, diff) >= maxN || p[sort.SearchInts(p, diff)] != diff {
 				continue
 			}
-			return diff
+			return int64(diff)
 		}
 	}
 	return 0
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ms/op)\n", result, float64(elapsed.Milliseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 44: Pentagon Numbers")
-	fmt.Println("=============================")
-	benchmark(100)
-}
+func main() { bench.Run(44, solve) }

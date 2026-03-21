@@ -1,13 +1,10 @@
+// Answer: 2783915460
 // Problem 24: Lexicographic Permutations
 // What is the millionth lexicographic permutation of the digits 0-9?
-// Answer: 2783915460
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func factorial(n int) int64 {
 	result := int64(1)
@@ -36,28 +33,4 @@ func solve() int64 {
 	return result
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10000
-
-	fmt.Println("Problem 24: Lexicographic Permutations")
-	fmt.Println("=======================================")
-	fmt.Printf("Finding millionth lexicographic permutation, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(24, solve) }

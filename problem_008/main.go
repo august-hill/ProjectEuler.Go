@@ -1,12 +1,10 @@
+// Answer: 23514624000
 // Problem 8: Largest Product in a Series
 // Find the thirteen adjacent digits with the greatest product.
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 const digits = "73167176531330624919225119674426574742355349194934" +
 	"96983520312774506326239578318016984801869478851843" +
@@ -29,40 +27,23 @@ const digits = "73167176531330624919225119674426574742355349194934" +
 	"05886116467109405077541002256983155200055935729725" +
 	"71636269561882670428252483600823257530420752963450"
 
-// Naive: O(n * k) - recalculate product for each window
-func naive(s string, k int) uint64 {
-	var maxProduct uint64 = 0
-	n := len(s)
-
-	for i := 0; i <= n-k; i++ {
-		var product uint64 = 1
-		for j := 0; j < k; j++ {
-			product *= uint64(s[i+j] - '0')
-		}
-		if product > maxProduct {
-			maxProduct = product
-		}
-	}
-	return maxProduct
-}
-
 // Optimized: O(n) - split by zeros, use divide/multiply sliding
-func optimized(s string, k int) uint64 {
+func solve() int64 {
+	k := 13
 	var maxProduct uint64 = 0
-	n := len(s)
+	n := len(digits)
 	start := 0
 
 	for start <= n-k {
 		// Find next zero-free segment
 		zeroPos := -1
 		for i := start; i < n && i < start+k; i++ {
-			if s[i] == '0' {
+			if digits[i] == '0' {
 				zeroPos = i
 			}
 		}
 
 		if zeroPos != -1 {
-			// Zero in initial window, skip past it
 			start = zeroPos + 1
 			continue
 		}
@@ -70,7 +51,7 @@ func optimized(s string, k int) uint64 {
 		// Calculate initial product for this segment
 		var product uint64 = 1
 		for i := start; i < start+k; i++ {
-			product *= uint64(s[i] - '0')
+			product *= uint64(digits[i] - '0')
 		}
 		if product > maxProduct {
 			maxProduct = product
@@ -78,50 +59,20 @@ func optimized(s string, k int) uint64 {
 
 		// Slide through zero-free portion
 		for i := start + k; i < n; i++ {
-			if s[i] == '0' {
-				// Hit a zero, restart after it
+			if digits[i] == '0' {
 				start = i + 1
 				break
 			}
-			// Divide by outgoing, multiply by incoming
-			product = product / uint64(s[i-k]-'0') * uint64(s[i]-'0')
+			product = product / uint64(digits[i-k]-'0') * uint64(digits[i]-'0')
 			if product > maxProduct {
 				maxProduct = product
 			}
 			if i == n-1 {
-				start = n // Done
+				start = n
 			}
 		}
 	}
-	return maxProduct
+	return int64(maxProduct)
 }
 
-func benchmark(name string, f func(string, int) uint64, s string, k int, iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 100; i++ {
-		f(s, k)
-	}
-
-	start := time.Now()
-	for i := 0; i < iterations; i++ {
-		f(s, k)
-	}
-	elapsed := time.Since(start)
-	result := f(s, k)
-	fmt.Printf("%s: %d (%.2f ns/op)\n", name, result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const k = 13
-	const iterations = 100000
-
-	fmt.Println("Problem 8: Largest Product in a Series")
-	fmt.Println("=======================================")
-	fmt.Printf("Window size: %d, Iterations: %d\n\n", k, iterations)
-
-	naiveTime := benchmark("Naive    ", naive, digits, k, iterations)
-	optTime := benchmark("Optimized", optimized, digits, k, iterations)
-
-	fmt.Printf("\nSpeedup: %.2fx\n", float64(naiveTime)/float64(optTime))
-}
+func main() { bench.Run(8, solve) }

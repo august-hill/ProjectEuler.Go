@@ -1,13 +1,10 @@
+// Answer: 171
 // Problem 19: Counting Sundays
 // How many Sundays fell on the first of the month during the 20th century?
-// Answer: 171
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func isLeapYear(year int) bool {
 	return (year%4 == 0 && year%100 != 0) || year%400 == 0
@@ -21,7 +18,7 @@ func daysInMonth(month, year int) int {
 	return days[month]
 }
 
-func solve() int {
+func solve() int64 {
 	// Jan 1, 1900 was a Monday (day_of_week = 1, where 0 = Sunday)
 	dayOfWeek := 1
 	count := 0
@@ -41,31 +38,7 @@ func solve() int {
 		}
 	}
 
-	return count
+	return int64(count)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10000
-
-	fmt.Println("Problem 19: Counting Sundays")
-	fmt.Println("============================")
-	fmt.Printf("Counting Sundays on 1st of month (1901-2000), Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(19, solve) }

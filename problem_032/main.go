@@ -1,13 +1,14 @@
+// Answer: 45228
 // Problem 32: Pandigital Products
 // Find the sum of all products whose multiplicand/multiplier/product identity
 // can be written as a 1 through 9 pandigital.
-// Answer: 45228
 
 package main
 
 import (
 	"fmt"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func isPandigital(a, b, c int) bool {
@@ -27,7 +28,7 @@ func isPandigital(a, b, c int) bool {
 	return true
 }
 
-func solve() int {
+func solve() int64 {
 	products := make(map[int]bool)
 
 	for a := 1; a < 100; a++ {
@@ -50,31 +51,7 @@ func solve() int {
 	for p := range products {
 		sum += p
 	}
-	return sum
+	return int64(sum)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 1000
-
-	fmt.Println("Problem 32: Pandigital Products")
-	fmt.Println("================================")
-	fmt.Printf("Sum of pandigital products, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(32, solve) }

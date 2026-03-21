@@ -7,7 +7,8 @@ package main
 import (
 	"fmt"
 	"sort"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func digitSignature(n int) string {
@@ -17,7 +18,7 @@ func digitSignature(n int) string {
 	return string(b)
 }
 
-func solve() int {
+func solve() int64 {
 	for x := 1; ; x++ {
 		sig := digitSignature(x)
 		match := true
@@ -28,27 +29,9 @@ func solve() int {
 			}
 		}
 		if match {
-			return x
+			return int64(x)
 		}
 	}
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 52: Permuted Multiples")
-	fmt.Println("===============================")
-	benchmark(1000)
-}
+func main() { bench.Run(52, solve) }

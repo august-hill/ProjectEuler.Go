@@ -4,10 +4,7 @@
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 const circLimit = 1000000
 
@@ -61,7 +58,7 @@ func isCircularPrime(n int, isPrime []bool) bool {
 	return true
 }
 
-func solve() int {
+func solve() int64 {
 	isPrime := sieve(circLimit)
 	count := 0
 
@@ -71,31 +68,7 @@ func solve() int {
 		}
 	}
 
-	return count
+	return int64(count)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10
-
-	fmt.Println("Problem 35: Circular Primes")
-	fmt.Println("============================")
-	fmt.Printf("Counting circular primes below 1 million, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(35, solve) }

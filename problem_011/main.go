@@ -1,12 +1,10 @@
+// Answer: 70600674
 // Problem 11: Largest Product in a Grid
 // Find the greatest product of four adjacent numbers in the 20x20 grid.
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 // Grid is a variable (not const) to ensure runtime evaluation
 var grid = [20][20]int{
@@ -35,66 +33,42 @@ var grid = [20][20]int{
 const size = 20
 const span = 4
 
-func solve(g *[20][20]int) int {
+func solve() int64 {
 	maxProduct := 0
 
 	for i := 0; i < size; i++ {
 		for j := 0; j < size; j++ {
 			// Horizontal (right)
 			if j <= size-span {
-				p := g[i][j] * g[i][j+1] * g[i][j+2] * g[i][j+3]
+				p := grid[i][j] * grid[i][j+1] * grid[i][j+2] * grid[i][j+3]
 				if p > maxProduct {
 					maxProduct = p
 				}
 			}
 			// Vertical (down)
 			if i <= size-span {
-				p := g[i][j] * g[i+1][j] * g[i+2][j] * g[i+3][j]
+				p := grid[i][j] * grid[i+1][j] * grid[i+2][j] * grid[i+3][j]
 				if p > maxProduct {
 					maxProduct = p
 				}
 			}
 			// Diagonal down-right
 			if i <= size-span && j <= size-span {
-				p := g[i][j] * g[i+1][j+1] * g[i+2][j+2] * g[i+3][j+3]
+				p := grid[i][j] * grid[i+1][j+1] * grid[i+2][j+2] * grid[i+3][j+3]
 				if p > maxProduct {
 					maxProduct = p
 				}
 			}
 			// Diagonal down-left
 			if i <= size-span && j >= span-1 {
-				p := g[i][j] * g[i+1][j-1] * g[i+2][j-2] * g[i+3][j-3]
+				p := grid[i][j] * grid[i+1][j-1] * grid[i+2][j-2] * grid[i+3][j-3]
 				if p > maxProduct {
 					maxProduct = p
 				}
 			}
 		}
 	}
-	return maxProduct
+	return int64(maxProduct)
 }
 
-func benchmark(name string, g *[20][20]int, iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve(g)
-	}
-
-	start := time.Now()
-	for i := 0; i < iterations; i++ {
-		solve(g)
-	}
-	elapsed := time.Since(start)
-	result := solve(g)
-	fmt.Printf("%s: %d (%.2f ns/op)\n", name, result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10000
-
-	fmt.Println("Problem 11: Largest Product in a Grid")
-	fmt.Println("=====================================")
-	fmt.Printf("Grid: %dx%d, Span: %d, Iterations: %d\n\n", size, size, span, iterations)
-
-	benchmark("Solve", &grid, iterations)
-}
+func main() { bench.Run(11, solve) }

@@ -5,9 +5,9 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func isPalindrome(s string) bool {
@@ -20,7 +20,7 @@ func isPalindrome(s string) bool {
 	return true
 }
 
-func solve() int {
+func solve() int64 {
 	sum := 0
 
 	for n := 1; n < 1000000; n++ {
@@ -32,31 +32,7 @@ func solve() int {
 		}
 	}
 
-	return sum
+	return int64(sum)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 100
-
-	fmt.Println("Problem 36: Double-base Palindromes")
-	fmt.Println("=====================================")
-	fmt.Printf("Sum of double-base palindromes below 1 million, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(36, solve) }

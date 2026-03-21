@@ -7,27 +7,32 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
 	"strconv"
 	"strings"
-	"time"
+	"sync"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 //go:embed p059_cipher.txt
 var cipherData string
 
 var cipher []int
+var loadOnce sync.Once
 
-func init() {
-	parts := strings.Split(strings.TrimSpace(cipherData), ",")
-	cipher = make([]int, len(parts))
-	for i, p := range parts {
-		n, _ := strconv.Atoi(strings.TrimSpace(p))
-		cipher[i] = n
-	}
+func loadCipher() {
+	loadOnce.Do(func() {
+		parts := strings.Split(strings.TrimSpace(cipherData), ",")
+		cipher = make([]int, len(parts))
+		for i, p := range parts {
+			n, _ := strconv.Atoi(strings.TrimSpace(p))
+			cipher[i] = n
+		}
+	})
 }
 
-func solve() int {
+func solve() int64 {
+	loadCipher()
 	bestSum := 0
 	bestSpaces := 0
 
@@ -58,25 +63,7 @@ func solve() int {
 			}
 		}
 	}
-	return bestSum
+	return int64(bestSum)
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 59: XOR Decryption")
-	fmt.Println("==========================")
-	benchmark(100)
-}
+func main() { bench.Run(59, solve) }

@@ -1,13 +1,10 @@
+// Answer: 100
 // Problem 33: Digit Cancelling Fractions
 // Find the denominator of the product of the four "curious" fractions in lowest terms.
-// Answer: 100
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func gcd(a, b int) int {
 	for b != 0 {
@@ -16,7 +13,7 @@ func gcd(a, b int) int {
 	return a
 }
 
-func solve() int {
+func solve() int64 {
 	numProduct := 1
 	denProduct := 1
 
@@ -43,31 +40,7 @@ func solve() int {
 		}
 	}
 
-	return denProduct / gcd(numProduct, denProduct)
+	return int64(denProduct / gcd(numProduct, denProduct))
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10000
-
-	fmt.Println("Problem 33: Digit Cancelling Fractions")
-	fmt.Println("=======================================")
-	fmt.Printf("Denominator of product in lowest terms, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(33, solve) }

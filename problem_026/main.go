@@ -1,13 +1,10 @@
+// Answer: 983
 // Problem 26: Reciprocal Cycles
 // Find the value of d < 1000 for which 1/d contains the longest recurring cycle.
-// Answer: 983
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func cycleLength(d int) int {
 	seen := make([]int, d)
@@ -30,7 +27,7 @@ func cycleLength(d int) int {
 	return 0 // Terminating decimal
 }
 
-func solve() int {
+func solve() int64 {
 	maxCycle := 0
 	result := 0
 
@@ -42,31 +39,7 @@ func solve() int {
 		}
 	}
 
-	return result
+	return int64(result)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 1000
-
-	fmt.Println("Problem 26: Reciprocal Cycles")
-	fmt.Println("==============================")
-	fmt.Printf("Finding d < 1000 with longest recurring cycle in 1/d, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(26, solve) }

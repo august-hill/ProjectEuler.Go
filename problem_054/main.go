@@ -6,11 +6,10 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
-	"runtime"
 	"sort"
 	"strings"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 //go:embed poker.txt
@@ -165,7 +164,7 @@ func (h *Hand) Compare(other *Hand) bool {
 	return false // Tie
 }
 
-func solve() int {
+func solve() int64 {
 	lines := strings.Split(strings.TrimSpace(pokerData), "\n")
 	player1Wins := 0
 
@@ -179,43 +178,7 @@ func solve() int {
 		}
 	}
 
-	return player1Wins
+	return int64(player1Wins)
 }
 
-func benchmark(iterations int) {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	// Force GC and get baseline memory stats
-	runtime.GC()
-	var memBefore runtime.MemStats
-	runtime.ReadMemStats(&memBefore)
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-
-	var memAfter runtime.MemStats
-	runtime.ReadMemStats(&memAfter)
-
-	nsPerOp := float64(elapsed.Nanoseconds()) / float64(iterations)
-	allocsPerOp := float64(memAfter.Mallocs-memBefore.Mallocs) / float64(iterations)
-	bytesPerOp := float64(memAfter.TotalAlloc-memBefore.TotalAlloc) / float64(iterations)
-
-	fmt.Printf("Result: %d (%.2f ns/op, %.0f allocs/op, %.0f B/op)\n", result, nsPerOp, allocsPerOp, bytesPerOp)
-}
-
-func main() {
-	iterations := 10000
-
-	fmt.Println("Problem 54: Poker Hands")
-	fmt.Println("=======================")
-	fmt.Printf("Counting Player 1 wins, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(54, solve) }

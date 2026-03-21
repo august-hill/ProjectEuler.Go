@@ -4,12 +4,9 @@
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
-func solve() int {
+func solve() int64 {
 	// Use Pascal's triangle to avoid overflow
 	// C(n,r) = C(n-1,r-1) + C(n-1,r)
 	const limit = 1000000
@@ -32,25 +29,7 @@ func solve() int {
 		prev = curr
 	}
 
-	return count
+	return int64(count)
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 53: Combinatoric Selections")
-	fmt.Println("====================================")
-	benchmark(100000)
-}
+func main() { bench.Run(53, solve) }

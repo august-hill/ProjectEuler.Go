@@ -1,12 +1,10 @@
+// Answer: 837799
 // Problem 14: Longest Collatz Sequence
 // Find starting number under 1 million with longest Collatz chain.
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 const limit = 1_000_000
 
@@ -23,7 +21,7 @@ func collatzLength(n uint64) int {
 	return length
 }
 
-func solve() uint64 {
+func solve() int64 {
 	var bestN uint64 = 0
 	bestLen := 0
 
@@ -34,31 +32,7 @@ func solve() uint64 {
 			bestN = n
 		}
 	}
-	return bestN
+	return int64(bestN)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result uint64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ms/op)\n", result, float64(elapsed.Milliseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10
-
-	fmt.Println("Problem 14: Longest Collatz Sequence")
-	fmt.Println("=====================================")
-	fmt.Printf("Limit: %d, Iterations: %d\n\n", limit, iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(14, solve) }

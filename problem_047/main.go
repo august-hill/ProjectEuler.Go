@@ -4,10 +4,7 @@
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func countDistinctPrimeFactors(n int, primes []int) int {
 	count := 0
@@ -49,7 +46,7 @@ func sievePrimes(max int) []int {
 	return primes
 }
 
-func solve() int {
+func solve() int64 {
 	const limit = 150000
 	const consecutive = 4
 	primes := sievePrimes(limit / 2)
@@ -59,7 +56,7 @@ func solve() int {
 		if countDistinctPrimeFactors(i, primes) == consecutive {
 			count++
 			if count == consecutive {
-				return i - consecutive + 1
+				return int64(i - consecutive + 1)
 			}
 		} else {
 			count = 0
@@ -68,22 +65,4 @@ func solve() int {
 	return 0
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ms/op)\n", result, float64(elapsed.Milliseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 47: Distinct Prime Factors")
-	fmt.Println("===================================")
-	benchmark(10)
-}
+func main() { bench.Run(47, solve) }

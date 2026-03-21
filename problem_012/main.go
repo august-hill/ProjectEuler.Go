@@ -1,12 +1,13 @@
+// Answer: 76576500
 // Problem 12: Highly Divisible Triangular Number
 // Find the first triangle number with over 500 divisors.
 
 package main
 
 import (
-	"fmt"
 	"math"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func countDivisors(n uint64) int {
@@ -25,39 +26,15 @@ func countDivisors(n uint64) int {
 	return count
 }
 
-func solve() uint64 {
+func solve() int64 {
 	n := uint64(1)
 	for {
 		triangle := n * (n + 1) / 2
 		if countDivisors(triangle) > 500 {
-			return triangle
+			return int64(triangle)
 		}
 		n++
 	}
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result uint64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ms/op)\n", result, float64(elapsed.Milliseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10
-
-	fmt.Println("Problem 12: Highly Divisible Triangular Number")
-	fmt.Println("===============================================")
-	fmt.Printf("Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(12, solve) }

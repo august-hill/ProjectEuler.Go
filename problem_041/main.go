@@ -4,10 +4,7 @@
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 // Sieve of Eratosthenes
 func sieve(max int) []bool {
@@ -51,41 +48,17 @@ func isPandigital(n int) bool {
 	return true
 }
 
-func solve() int {
+func solve() int64 {
 	// Max 7-digit pandigital (8,9 digit pandigitals have digit sums divisible by 3)
 	const maxPandigital = 7654321
 	isPrime := sieve(maxPandigital)
 
 	for n := maxPandigital; n >= 2; n-- {
 		if isPrime[n] && isPandigital(n) {
-			return n
+			return int64(n)
 		}
 	}
 	return 0
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 100
-
-	fmt.Println("Problem 41: Pandigital Prime")
-	fmt.Println("=============================")
-	fmt.Printf("Finding largest pandigital prime, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(41, solve) }

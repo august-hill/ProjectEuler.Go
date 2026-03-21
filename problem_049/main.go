@@ -5,10 +5,10 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func sieve(max int) []bool {
@@ -68,22 +68,4 @@ func solve() int64 {
 	return 0
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 49: Prime Permutations")
-	fmt.Println("===============================")
-	benchmark(1000)
-}
+func main() { bench.Run(49, solve) }

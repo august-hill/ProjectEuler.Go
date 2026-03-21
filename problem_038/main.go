@@ -6,9 +6,9 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func isPandigital(s string) bool {
@@ -49,28 +49,4 @@ func solve() int64 {
 	return largest
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 1000
-
-	fmt.Println("Problem 38: Pandigital Multiples")
-	fmt.Println("=================================")
-	fmt.Printf("Finding largest pandigital multiple, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(38, solve) }

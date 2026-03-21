@@ -4,10 +4,7 @@
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func sievePrimes(max int) ([]bool, []int) {
 	isPrime := make([]bool, max+1)
@@ -30,7 +27,7 @@ func sievePrimes(max int) ([]bool, []int) {
 	return isPrime, primes
 }
 
-func solve() int {
+func solve() int64 {
 	const limit = 1000000
 	isPrime, primes := sievePrimes(limit)
 
@@ -50,25 +47,7 @@ func solve() int {
 			}
 		}
 	}
-	return maxSum
+	return int64(maxSum)
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ms/op)\n", result, float64(elapsed.Milliseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 50: Consecutive Prime Sum")
-	fmt.Println("==================================")
-	benchmark(100)
-}
+func main() { bench.Run(50, solve) }

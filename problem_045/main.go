@@ -4,10 +4,7 @@
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func pentagonal(n int64) int64 { return n * (3*n - 1) / 2 }
 func hexagonal(n int64) int64  { return n * (2*n - 1) }
@@ -37,22 +34,4 @@ func solve() int64 {
 	}
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 45: Triangular, Pentagonal, Hexagonal")
-	fmt.Println("==============================================")
-	benchmark(100000)
-}
+func main() { bench.Run(45, solve) }

@@ -1,12 +1,14 @@
+// Answer: 5537376230
 // Problem 13: Large Sum
 // Find the first ten digits of the sum of one hundred 50-digit numbers.
 
 package main
 
 import (
-	"fmt"
 	"math/big"
-	"time"
+	"strconv"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 var numbers = []string{
@@ -112,38 +114,16 @@ var numbers = []string{
 	"53503534226472524250874054075591789781264330331690",
 }
 
-func solve() string {
+func solve() int64 {
 	sum := big.NewInt(0)
 	for _, s := range numbers {
 		n := new(big.Int)
 		n.SetString(s, 10)
 		sum.Add(sum, n)
 	}
-	return sum.String()[:10]
+	first10 := sum.String()[:10]
+	result, _ := strconv.ParseInt(first10, 10, 64)
+	return result
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result string
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %s (%.2f µs/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations)/1000)
-	return elapsed
-}
-
-func main() {
-	const iterations = 10000
-
-	fmt.Println("Problem 13: Large Sum")
-	fmt.Println("=====================")
-	fmt.Printf("Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(13, solve) }

@@ -1,13 +1,13 @@
+// Answer: 31626
 // Problem 21: Amicable Numbers
 // Evaluate the sum of all amicable numbers under 10000.
-// Answer: 31626
 
 package main
 
 import (
-	"fmt"
 	"math"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func sumProperDivisors(n int) int {
@@ -28,7 +28,7 @@ func sumProperDivisors(n int) int {
 	return sum
 }
 
-func solve() int {
+func solve() int64 {
 	sum := 0
 	for a := 2; a < 10000; a++ {
 		b := sumProperDivisors(a)
@@ -36,31 +36,7 @@ func solve() int {
 			sum += a
 		}
 	}
-	return sum
+	return int64(sum)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 1000
-
-	fmt.Println("Problem 21: Amicable Numbers")
-	fmt.Println("=============================")
-	fmt.Printf("Sum of amicable numbers under 10000, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(21, solve) }

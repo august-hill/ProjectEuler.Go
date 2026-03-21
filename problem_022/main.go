@@ -1,6 +1,6 @@
+// Answer: 871198282
 // Problem 22: Names Scores
 // Total of all name scores in the file.
-// Answer: 871198282
 
 package main
 
@@ -9,7 +9,8 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func nameValue(name string) int {
@@ -20,7 +21,9 @@ func nameValue(name string) int {
 	return sum
 }
 
-func loadNames() []string {
+var names []string
+
+func init() {
 	data, err := os.ReadFile("names.txt")
 	if err != nil {
 		fmt.Println("Error reading names.txt:", err)
@@ -28,10 +31,8 @@ func loadNames() []string {
 	}
 
 	raw := strings.ReplaceAll(string(data), "\"", "")
-	return strings.Split(raw, ",")
+	names = strings.Split(raw, ",")
 }
-
-var names []string
 
 func solve() int64 {
 	sorted := make([]string, len(names))
@@ -45,29 +46,4 @@ func solve() int64 {
 	return total
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 1000
-
-	fmt.Println("Problem 22: Names Scores")
-	fmt.Println("========================")
-	fmt.Printf("Computing total of all name scores, Iterations: %d\n\n", iterations)
-
-	names = loadNames()
-	benchmark(iterations)
-}
+func main() { bench.Run(22, solve) }

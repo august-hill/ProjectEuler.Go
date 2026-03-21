@@ -5,9 +5,9 @@
 package main
 
 import (
-	"fmt"
 	"math/big"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func reverse(n *big.Int) *big.Int {
@@ -42,32 +42,14 @@ func isLychrel(n int) bool {
 	return true
 }
 
-func solve() int {
+func solve() int64 {
 	count := 0
 	for n := 1; n < 10000; n++ {
 		if isLychrel(n) {
 			count++
 		}
 	}
-	return count
+	return int64(count)
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 55: Lychrel Numbers")
-	fmt.Println("===========================")
-	benchmark(100)
-}
+func main() { bench.Run(55, solve) }

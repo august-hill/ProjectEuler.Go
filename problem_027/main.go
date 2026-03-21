@@ -1,14 +1,11 @@
+// Answer: -59231
 // Problem 27: Quadratic Primes
 // Find the product of coefficients a and b, for the quadratic n^2 + an + b
 // that produces the maximum number of primes for consecutive values of n.
-// Answer: -59231
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 const primeLimit = 1000000
 
@@ -27,7 +24,7 @@ func sieve(limit int) []bool {
 	return isPrime
 }
 
-func solve() int {
+func solve() int64 {
 	isPrime := sieve(primeLimit)
 
 	checkPrime := func(n int) bool {
@@ -58,31 +55,7 @@ func solve() int {
 		}
 	}
 
-	return result
+	return int64(result)
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10
-
-	fmt.Println("Problem 27: Quadratic Primes")
-	fmt.Println("=============================")
-	fmt.Printf("Finding product a*b for n^2 + an + b, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(27, solve) }

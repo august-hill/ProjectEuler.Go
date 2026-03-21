@@ -1,13 +1,10 @@
+// Answer: 1074
 // Problem 18: Maximum Path Sum I
 // Find the maximum total from top to bottom of the triangle.
-// Answer: 1074
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 const rows = 15
 
@@ -29,7 +26,7 @@ var triangle = [rows][rows]int{
 	{4, 62, 98, 27, 23, 9, 70, 98, 73, 93, 38, 53, 60, 4, 23},
 }
 
-func solve() int {
+func solve() int64 {
 	// Dynamic programming: work from bottom up
 	var dp [rows]int
 	for i := 0; i < rows; i++ {
@@ -46,31 +43,7 @@ func solve() int {
 		}
 	}
 
-	return dp[0]
+	return int64(dp[0])
 }
 
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10000
-
-	fmt.Println("Problem 18: Maximum Path Sum I")
-	fmt.Println("===============================")
-	fmt.Printf("Finding maximum path sum in triangle, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(18, solve) }

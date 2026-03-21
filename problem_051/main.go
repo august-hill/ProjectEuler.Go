@@ -5,9 +5,9 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 func sieve(max int) []bool {
@@ -25,7 +25,7 @@ func sieve(max int) []bool {
 	return isPrime
 }
 
-func solve() int {
+func solve() int64 {
 	const upper = 999999
 	const lower = upper / 10
 	isPrime := sieve(upper)
@@ -63,7 +63,7 @@ func solve() int {
 					}
 
 					if primeCount == 8 {
-						return firstPrime
+						return int64(firstPrime)
 					}
 				}
 			}
@@ -72,22 +72,4 @@ func solve() int {
 	return 0
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ms/op)\n", result, float64(elapsed.Milliseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 51: Prime Digit Replacements")
-	fmt.Println("=====================================")
-	benchmark(10)
-}
+func main() { bench.Run(51, solve) }

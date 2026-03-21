@@ -4,10 +4,7 @@
 
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 func sieve(max int) []bool {
 	isPrime := make([]bool, max+1)
@@ -24,7 +21,7 @@ func sieve(max int) []bool {
 	return isPrime
 }
 
-func solve() int {
+func solve() int64 {
 	const limit = 10000
 	isPrime := sieve(limit)
 
@@ -49,28 +46,10 @@ func solve() int {
 		}
 
 		if !found {
-			return c
+			return int64(c)
 		}
 	}
 	return 0
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 46: Goldbach's Other Conjecture")
-	fmt.Println("========================================")
-	benchmark(1000)
-}
+func main() { bench.Run(46, solve) }

@@ -10,12 +10,12 @@
 package main
 
 import (
-	"fmt"
 	"math/big"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
-func solve() int {
+func solve() int64 {
 	count := 0
 	n := big.NewInt(1)
 	d := big.NewInt(1)
@@ -32,25 +32,7 @@ func solve() int {
 			count++
 		}
 	}
-	return count
+	return int64(count)
 }
 
-func benchmark(iterations int) time.Duration {
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ns/op)\n", result, float64(elapsed.Nanoseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	fmt.Println("Problem 57: Square Root Convergents")
-	fmt.Println("====================================")
-	benchmark(100)
-}
+func main() { bench.Run(57, solve) }

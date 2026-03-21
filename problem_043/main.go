@@ -5,9 +5,9 @@
 package main
 
 import (
-	"fmt"
 	"sort"
-	"time"
+
+	"github.com/august-hill/ProjectEuler.Go/bench"
 )
 
 // Generate next lexicographic permutation in-place, returns false when done
@@ -40,6 +40,14 @@ func nextPermutation(a []int) bool {
 		a[i], a[j] = a[j], a[i]
 	}
 	return true
+}
+
+func pow10(n int) int64 {
+	result := int64(1)
+	for i := 0; i < n; i++ {
+		result *= 10
+	}
+	return result
 }
 
 func solve() int64 {
@@ -75,36 +83,4 @@ func solve() int64 {
 	return sum
 }
 
-func pow10(n int) int64 {
-	result := int64(1)
-	for i := 0; i < n; i++ {
-		result *= 10
-	}
-	return result
-}
-
-func benchmark(iterations int) time.Duration {
-	// Warmup
-	for i := 0; i < 2; i++ {
-		solve()
-	}
-
-	start := time.Now()
-	var result int64
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-	fmt.Printf("Result: %d (%.2f ms/op)\n", result, float64(elapsed.Milliseconds())/float64(iterations))
-	return elapsed
-}
-
-func main() {
-	const iterations = 10
-
-	fmt.Println("Problem 43: Sub-string Divisibility")
-	fmt.Println("====================================")
-	fmt.Printf("Finding pandigitals with substring divisibility, Iterations: %d\n\n", iterations)
-
-	benchmark(iterations)
-}
+func main() { bench.Run(43, solve) }

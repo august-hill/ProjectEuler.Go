@@ -1,9 +1,10 @@
+// Problem 37: Truncatable Primes
+// Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
+// Answer: 748317
+
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "github.com/august-hill/ProjectEuler.Go/bench"
 
 const LIMIT = 1000000
 
@@ -52,7 +53,7 @@ func isRightTruncatablePrime(n int, isPrime []bool) bool {
 	return true
 }
 
-func solve() int {
+func solve() int64 {
 	isPrime := sieve(LIMIT)
 	sum := 0
 	count := 0
@@ -63,27 +64,7 @@ func solve() int {
 			count++
 		}
 	}
-	return sum
+	return int64(sum)
 }
 
-func main() {
-	const iterations = 100
-
-	fmt.Println("Problem 37: Truncatable Primes")
-	fmt.Println("===============================")
-
-	// Warmup
-	for i := 0; i < 10; i++ {
-		solve()
-	}
-
-	// Benchmark
-	start := time.Now()
-	var result int
-	for i := 0; i < iterations; i++ {
-		result = solve()
-	}
-	elapsed := time.Since(start)
-
-	fmt.Printf("Result: %d (%.2f µs/op)\n", result, float64(elapsed.Microseconds())/float64(iterations))
-}
+func main() { bench.Run(37, solve) }
