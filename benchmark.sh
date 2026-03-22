@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # benchmark.sh - Run all Project Euler Go solutions and collect benchmark data
 set -euo pipefail
 
